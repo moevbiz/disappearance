@@ -1,21 +1,19 @@
 import { paper } from "paper";
-import { project } from "paper/dist/paper-core";
 import { words } from "./words";
 
 const canvas = document.querySelector('#canvas');
-paper.install(window);
+// paper.install(window);
 paper.setup(canvas);
-
 
 // settings
 const MIN_WORDS = 2;
 const MAX_WORDS = 7;
-const WORD_COUNT = getRandomArbitrary(MIN_WORDS-1, MAX_WORDS);
 const DOT_RADIUS = 3;
 const MARGINS = 100;
 
 // some global variables
-let path = new Path();
+const wordCount = getRandomArbitrary(MIN_WORDS-1, MAX_WORDS);
+let path = new paper.Path();
 let selectedWords = [];
 let points = [];
 
@@ -39,16 +37,16 @@ function render() {
     path.strokeColor = 'black';
 
     // select some random words
-    for (let i = 0; i <= WORD_COUNT; i++) {
+    for (let i = 0; i <= wordCount; i++) {
         let word = words.splice(Math.floor(Math.random() * words.length), 1)
         selectedWords.push(word);
     }
 
     selectedWords.forEach((word, i) => {
         // create a new dot coordinate
-        let point = new Point(
-            getRandomArbitrary(MARGINS, view.viewSize.width - MARGINS),
-            getRandomArbitrary(MARGINS, view.viewSize.height - MARGINS)
+        let point = new paper.Point(
+            getRandomArbitrary(MARGINS, paper.view.viewSize.width - MARGINS),
+            getRandomArbitrary(MARGINS, paper.view.viewSize.height - MARGINS)
         );
         // store  in array
         points.push(point);
@@ -59,16 +57,16 @@ function render() {
 
     points.forEach((point, i) => {
         // create the dots
-        let dot = new Path.Circle(point, DOT_RADIUS);
+        let dot = new paper.Path.Circle(point, DOT_RADIUS);
         dot.fillColor = 'black';
 
         // calculate the curve
         let x = getRandomArbitrary(-200, 200);
         let y = getRandomArbitrary(-200, 200);
-        let p = new Point(x, y);
+        let p = new paper.Point(x, y);
 
         // create the segment
-        let segment = new Segment(
+        let segment = new paper.Segment(
             point,
             // make curve?
             i == indexOfSegmentWithArc + 1 ? p : null,
@@ -81,7 +79,7 @@ function render() {
 
     points.forEach((point, i) => {
         // add text to the dots
-        let text = new PointText(point.subtract(new Point(0, 10)));
+        let text = new paper.PointText(point.subtract(new paper.Point(0, 10)));
         text.content = selectedWords[i];
         positionText(text, point);
     })
