@@ -2,7 +2,6 @@ import { paper } from "paper";
 import { words } from "./words";
 
 const canvas = document.querySelector('#canvas');
-// paper.install(window);
 paper.setup(canvas);
 
 // settings
@@ -12,33 +11,46 @@ const DOT_RADIUS = 3;
 const MARGINS = 100;
 
 // some global variables
-const wordCount = getRandomArbitrary(MIN_WORDS-1, MAX_WORDS);
-let path = new paper.Path();
-let selectedWords = [];
-let points = [];
+let selectedWords;
+let hasBeenInitialised = false;
 
 function init() {
-    // render the canvas
     render();
     
     // add event listeners
     document.getElementById("download-to-svg").onclick = function() {
         downloadSVG();
     }
-    // document.querySelector("button#refresh").onclick = function() {
-    //     render();
-    // }
+    document.querySelector("button#refresh").onclick = function() {
+        render();
+    }
+
+    hasBeenInitialised = true;
 }
 
 function render() {
-    // if there is already a drawing, remove it
+    // duplicate words array to manipulate it
+    let wordsDupe = [...words];
 
-    // set stroke color
+    // max # of words
+    let wordCount = getRandomArbitrary(MIN_WORDS-1, MAX_WORDS);
+
+    // reset stuff
+    let points = [];
+    selectedWords = [];
+
+    // if there is already a drawing, remove it
+    if (hasBeenInitialised) {
+        paper.project.activeLayer.removeChildren();
+    }
+
+    // make path
+    let path = new paper.Path();
     path.strokeColor = 'black';
 
     // select some random words
     for (let i = 0; i <= wordCount; i++) {
-        let word = words.splice(Math.floor(Math.random() * words.length), 1)
+        let word = wordsDupe.splice(Math.floor(Math.random() * wordsDupe.length-1), 1)
         selectedWords.push(word);
     }
 
@@ -77,15 +89,15 @@ function render() {
         path.add(segment)
     })
 
+    // add text to the dots
     points.forEach((point, i) => {
-        // add text to the dots
         let text = new paper.PointText(point.subtract(new paper.Point(0, 10)));
         text.content = selectedWords[i];
-        positionText(text, point);
+        positionText(text, point, path);
     })
 }
 
-function positionText(text, point) {
+function positionText(text, point, path) {
     text.justification = 'center';
 
     // try positioning bottom of dot
@@ -113,7 +125,7 @@ function getRandomInt(max) {
 }
 
 function downloadSVG() {
-    let fileName = `${selectedWords.join('-')}.svg`;
+    let fileName = selectedWords.join('-') + ".svg";
     let url = "data:image/svg+xml;utf8," + encodeURIComponent(paper.project.exportSVG({asString:true}));
     let link = document.createElement("a");
     link.download = fileName;
