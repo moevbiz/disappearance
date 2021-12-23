@@ -1,7 +1,9 @@
 import { paper } from "paper";
-import { words } from "./words";
+import { words } from "./resource/words";
 
 const canvas = document.querySelector('#canvas');
+canvas.style.width = '100%';
+canvas.style.height = '100%';
 paper.setup(canvas);
 
 // settings

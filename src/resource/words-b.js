@@ -1,4 +1,4 @@
-export const words = [
+export const wordsB = [
     'grim',
     'world',
     'flights',
@@ -30,5 +30,7 @@ export const words = [
     'seemingly',
     'careful',
     'attend',
-    'facilitate'
+    'facilitate',
+    'primarily',
+    'unrest'
 ];

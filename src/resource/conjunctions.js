@@ -1,0 +1,18 @@
+export const conjunctions = [
+    'after',
+    'lest',
+    'though',
+    'hence',
+    'henceforth',
+    'wherever',
+    'meanwhile',
+    'thus',
+    'because',
+    'although',
+    'unless',
+    'and',
+    'not',
+    'but',
+    'or',
+    'yet',
+];
